@@ -1,4 +1,4 @@
-####    Resourse link
+####    Starting point resourse link
 ####    https://github.com/computeronix/docker-gunbot/blob/stable/Dockerfile#L77
 ####
 ARG GUNBOTVERSION="latest"
