@@ -1,0 +1,60 @@
+version: '3.9'
+###########################  SECRETS  ###########################
+secrets:
+  gunthy_wallet_file:
+    file: $DOCKER_SECRETS_DIR/gunthy_wallet_file
+  master_key_file:
+    file: $DOCKER_SECRETS_DIR/master_key_file
+  master_secret_file:
+    file: $DOCKER_SECRETS_DIR/master_secret_file
+###########################  SERVICES - Gunbot  ###########################
+services:
+  gunbot:
+    container_name: gunbot
+    image: orik999/gunbot
+    restart: unless-stopped
+    networks:
+      - t2_proxy
+      - socket_proxy
+    environment:
+      TZ: $TZ
+      USER_ID: $PUID
+      GROUP_ID: $PGID
+      DOCKER_HOST: tcp://socket-proxy:2375
+      HTTPS_ENABLE: false   # Must provide true/false
+      AUTH_PASS: false      # Must provide true/false
+#      GUNTHY_WALLET: ""
+#      MASTER_KEY: ""
+#      MASTER_SECRET: ""
+      GUNTHY_WALLET_FILE: /run/secrets/gunthy_wallet_file
+      MASTER_KEY_FILE: /run/secrets/master_key_file
+      MASTER_SECRET_FILE: /run/secrets/master_secret_file
+    volumes:
+     - $DOCKER_DIR/gunbot/data:/mnt/gunbot
+   secrets:
+     - gunthy_wallet_file
+     - master_key_file
+     - master_secret_file
+    labels:
+      traefik.enable: true
+      ## HTTP Routers
+      traefik.http.routers.gunbot-rtr.entryPoints: https
+      traefik.http.routers.gunbot-rtr.rule: Host(`gb.$DOMAINNAME`)
+      ## Middlewares
+      traefik.http.routers.gunbot-rtr.tls: true
+      traefik.http.routers.gunbot-rtr.middlewares: chain-authelia@file
+      ## HTTP Services
+      traefik.http.routers.gunbot-rtr.service: gunbot-svc
+#      traefik.http.services.gunbot-svc.loadbalancer.server.scheme: https   # Turn on if HTTPS_ENABLE true
+      traefik.http.services.gunbot-svc.loadbalancer.server.port: 5000
+
+networks:
+  t2_proxy:
+    name: t2_proxy
+    driver: bridge
+    external: true
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    external: true
+
