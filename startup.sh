@@ -1,7 +1,7 @@
 #!/bin/sh
-[ ! -d /mnt/gunbot1 ] && \
- mkdir /mnt/gunbot1
- 
+[ ! -d /mnt/gunbot ] && \
+ mkdir /mnt/gunbot
+
 [ ! -d /mnt/gunbot/json ] && \
 mkdir /mnt/gunbot/json && \
 ln -sf /mnt/gunbot/json /opt/gunbot/json || \
@@ -48,6 +48,12 @@ touch /opt/gunbot/new_gui.sqlite && \
 cp /opt/gunbot/new_gui.sqlite /mnt/gunbot/new_gui.sqlite && \
 ln -sf /mnt/gunbot/new_gui.sqlite /opt/gunbot/new_gui.sqlite || \
 ln -sf /mnt/gunbot/new_gui.sqlite /opt/gunbot/new_gui.sqlite
+
+[ -d /mnt/gunbot/gunbot_logs ] && \
+ln -sf /mnt/gunbot/gunbot_logs /opt/gunbot/gunbot_logs
+
+[ -f /mnt/gunbot/MSE.json ] && \
+ln -sf /mnt/gunbot/MSE.json /opt/gunbot/MSE.json
 
 [ ! -s /mnt/gunbot/config-js-example.txt ] && \
 cp /opt/gunbot/config-js-example.txt /mnt/gunbot/config-js-example.txt
