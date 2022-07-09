@@ -39,7 +39,7 @@ services:
       traefik.enable: true
       ## HTTP Routers
       traefik.http.routers.gunbot-rtr.entryPoints: https
-      traefik.http.routers.gunbot-rtr.rule: Host(`gb.$DOMAINNAME`)
+      traefik.http.routers.gunbot-rtr.rule: Host(`gb.$DOMAIN`)
       ## Middlewares
       traefik.http.routers.gunbot-rtr.tls: true
       traefik.http.routers.gunbot-rtr.middlewares: chain-authelia@file
